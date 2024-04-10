@@ -1,0 +1,22 @@
+<odoo>
+    <record id="purchase_order_form_pa" model="ir.ui.view">
+        <field name="model">purchase.order</field>
+        <field name="name">account.move.form.pa</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+		<field name="arch" type="xml">
+		  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='products']/field[@name='order_line']/form[1]/group[1]/group[1]/field[@name='taxes_id']" position="after">
+			<field name="budget_line_id"/>
+			<field name="monto_current_budget_line"/>
+			<field name="saldo_current_budget_line"/>
+			<field name="comprado_current_budget_line"/>			
+		  </xpath>		
+		  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='products']/field[@name='order_line']/tree[1]/field[@name='name']" position="after">
+			<field name="budget_line_id" optional="hide"/>
+			<field name="monto_current_budget_line" optional="hide"/>
+			<field name="saldo_current_budget_line" optional="hide"/>
+			<field name="comprado_current_budget_line" optional="hide"/>
+		  </xpath>
+
+			</field>
+    </record>
+</odoo>

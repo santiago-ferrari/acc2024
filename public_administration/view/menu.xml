@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+                       
+<!-- MENU CONTABILIDAD PRESUPUESTARIA -->
+
+           <menuitem
+            name="Presupuesto"
+            id="pa_menu_contabilidad_presupuestaria"
+            web_icon="hr_payroll,static/description/icon.png"            
+            sequence="50"
+            groups="pa_group_usuario,pa_group_direccion_director"
+            />
+      
+        <menuitem
+            name="Cuentas"
+            id="pa_menu_cuentas_presupuestarias"
+            sequence="5"
+            parent="pa_menu_contabilidad_presupuestaria"
+            groups="pa_group_usuario,pa_group_direccion_director"
+            />      
+           
+        <!-- menuitem
+            name="Procesamiento"
+            id="pa_menu_procesamiento_presupuesto"
+            sequence="30"
+            parent="pa_menu_contabilidad_presupuestaria"
+            groups="pa_group_usuario,pa_group_direccion_director"
+            / -->
+      
+        <menuitem
+            name="Configuración"
+            id="pa_menu_configuracion_contabilidad_presupuestaria"
+            sequence="100"
+            parent="pa_menu_contabilidad_presupuestaria"
+            groups="pa_group_usuario,pa_group_direccion_director"
+            />      
+        <menuitem 
+            name="Años fiscales"
+            action="date_range.date_range_action" 
+            id="pa_menu_anios_fiscales" 
+            parent="pa_menu_configuracion_contabilidad_presupuestaria" 
+            sequence="20"
+            groups="pa_group_usuario,pa_group_direccion_director"
+            />
+            
+    </data>
+</openerp>

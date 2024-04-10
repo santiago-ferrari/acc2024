@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <data>
+            # Tax Code Templates
+            #
+            # La generación de los códigos esta dada por los valores de las tablas del AFIP.
+            #
+            # Listado de impuestos:
+            # http://www.afip.gob.ar/genericos/conceptosSubconceptosValidos/listadoImpuestosConSubcon.asp
+            # 
+            # Tablas generales:
+            # http://www.afip.gob.ar/fe/documentos/TABLAS%20GENERALES%20V.0.1%20%2026012011.xls
+            #
+            # [código de tributo][código de impuesto]:[V: Ventas, C: Compra, P: Percepción, R: Retención, B: Valor bruto de la factura]
+            #
+
+            # LO QUE SE HACE ES SUPLANTAR LOS REGISTROS DEL MODELO account.account.template POR LOS DE LA MUNI
+            # Chart of Accounts
+            # Ponemos company comentado en cada linea para poder hacer un replace y usarlo en l10n_Ar_invoice como dato demo
+
+            # PRIMERO BORRO TODOS LOS REGISTROS
+            <!-- delete model="res.partner" search="[]"/  -->
+            <!-- deudores por ventas y proveedores/ -->
+            <!-- delete model="account.account" search="[('code','not in',('121000','211000'))]"/ --> 
+          
+            #agrego un tipo de cuenta vista
+            <record model="account.account.type" id="data_account_type_view_budget">
+                <field name="name">Vista para presupuestos</field>
+                <field name="type">budget_view</field>
+                <field name="note">Usada para cuentas padres en un presupuesto</field>
+            </record>
+            <!-- ETIQUETAS RECURSOS -->
+            <!-- delete model="account.account.tag" search="[]"/ -->
+            <record id="account_tag_recurso" model="account.account.tag">
+                <field name="name">RECURSO</field>
+                <field name="applicability">accounts</field>
+            </record>
+            <record id="account_tag_subrubro_recurso" model="account.account.tag">
+                <field name="name">Subrubro Recurso</field>
+                <field name="applicability">accounts</field>
+            </record>
+            <record id="account_tag_rubro_recurso" model="account.account.tag">
+                <field name="name">Rubro Recurso</field>
+                <field name="applicability">accounts</field>
+            </record>
+            <record id="account_tag_item_recurso" model="account.account.tag">
+                <field name="name">Item Recurso</field>
+                <field name="applicability">accounts</field>
+            </record>
+            <record id="account_tag_inciso_recurso" model="account.account.tag">
+                <field name="name">Inciso Recurso</field>
+                <field name="applicability">accounts</field>
+            </record>
+            <record id="account_tag_anexo_recurso" model="account.account.tag">
+                <field name="name">Anexo Recurso</field>
+                <field name="applicability">accounts</field>
+            </record>
+
+            <!-- ETIQUETAS EROGACIONES -->
+            <record id="account_tag_erogacion" model="account.account.tag">
+                <field name="name">EROGACION</field>
+                <field name="applicability">accounts</field>
+            </record>
+      
+            <record id="account_tag_sub_partida_erogacion" model="account.account.tag">
+                <field name="name">Sub-Partida Erogación</field>
+                <field name="applicability">accounts</field>
+            </record>
+            <record id="account_tag_partida_erogacion" model="account.account.tag">
+                <field name="name">Partida Erogación</field>
+                <field name="applicability">accounts</field>
+            </record>
+            <record id="account_tag_sub_item_erogacion" model="account.account.tag">
+                <field name="name">Sub Item Erogación</field>
+                <field name="applicability">accounts</field>
+            </record>
+            <record id="account_tag_item_erogacion" model="account.account.tag">
+                <field name="name">Item Erogación</field>
+                <field name="applicability">accounts</field>
+            </record>
+            <record id="account_tag_rubro_erogacion" model="account.account.tag">
+                <field name="name">Rubro Erogación</field>
+                <field name="applicability">accounts</field>
+            </record>      
+            <record id="account_tag_subrubro_erogacion" model="account.account.tag">
+                <field name="name">Subrubro Erogación</field>
+                <field name="applicability">accounts</field>
+            </record>         
+            <record id="account_tag_part_pal_erogacion" model="account.account.tag">
+                <field name="name">Part. Pal. Erogación</field>
+                <field name="applicability">accounts</field>
+            </record>
+            <record id="account_tag_inciso_erogacion" model="account.account.tag">
+                <field name="name">Inciso Erogación</field>
+                <field name="applicability">accounts</field>
+            </record>
+            <record id="account_tag_anexo_erogacion" model="account.account.tag">
+                <field name="name">Anexo Erogación</field>
+                <field name="applicability">accounts</field>
+            </record>
+            
+  
+      
+      
+      
+    </data>
+</odoo>

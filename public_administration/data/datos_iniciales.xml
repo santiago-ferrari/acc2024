@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+      <data>
+         <!-- valores por defecto partidas excedidas-->
+        <record id="pa_linea_recurso" model="ir.filters">
+            <field name="name">Recurso</field>
+            <field name="model_id">pa.budget.lines</field>
+            <field name="domain">[('recurso_erogacion','=','recurso')]</field>  
+            <field name="user_id" eval="False"/>
+        </record>
+        <record id="pa_linea_erogacion" model="ir.filters">
+            <field name="name">Erogación</field>
+            <field name="model_id">pa.budget.lines</field>
+            <field name="domain">[('recurso_erogacion','=','erogacion')]</field>  
+            <field name="user_id" eval="False"/>
+        </record>
+        <record id="pa_partidas_excedidas" model="ir.filters">
+            <field name="name">Partidas excedidas</field>
+            <field name="model_id">pa.budget.lines</field>
+            <field name="domain">[('saldo','&lt;',0)]</field>  
+            <field name="user_id" eval="False"/>
+        </record>
+<!--         <record id="pa_lineas_presupuesto_anio_actual" model="ir.filters">
+            <field name="name">Presupuesto año en curso</field>
+            <field name="model_id">pa.budget.lines</field>
+            <field name="domain">[('budget_id.fiscalyear_id.name','=',datetime.datetime.now().year)]</field>  
+            <field name="user_id" eval="False"/>
+            <field name="is_default" eval="True"/>
+        </record> -->
+
+        <record id="pa_A4_paper_format" model="report.paperformat">
+            <field name="name">A4 Administración Pública</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">290</field>
+            <field name="page_width">210</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">25</field>
+            <field name="margin_bottom">23</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">20</field>
+            <field name="dpi">150</field>
+        </record>
+        <record id="pa_A4_paper_format_apaisada" model="report.paperformat">
+            <field name="name">A4 Administración Pública apaisada</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">290</field>
+            <field name="page_width">210</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">25</field>
+            <field name="margin_bottom">23</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">20</field>
+            <field name="dpi">150</field>
+        </record>
+        
+  
+        <record id="type_anio" model="date.range.type">
+            <field name="name">Año</field>
+        </record>
+
+        <record id="anio_2023" model="date.range">
+            <field name="name">2023</field>
+            <field name="type_id" ref="type_anio"/>
+            <field name="date_start">2023-01-01</field>
+            <field name="date_end">2023-12-31</field>
+        </record>        
+ 
+    </data>
+</odoo>

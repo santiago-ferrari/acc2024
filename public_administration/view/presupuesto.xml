@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- SEARCH VIEW -->
+    <record id="pa_view_pa_budget_lines_filter" model="ir.ui.view">
+        <field name="name">pa.budget.lines.select</field>
+        <field name="model">pa.budget.lines</field>
+        <field name="arch" type="xml">
+            <search string="Presupuesto">
+                <field name="budget_id" string="Presupuesto"/> 
+				<field name="name"/>
+				<field name="accounts_ids" string="Cuentas"/>
+								
+                <field name="monto"/>
+                <filter name="partidas_excedidas" string="Partidas excedidas" domain="[('saldo','&lt;',0)]"/>
+                <filter name="cuentas_recurso"  string="Cuentas de recurso" domain="[('recurso_erogacion','=','recurso')]"/>
+                <filter name="cuentas_erogacion" string="Cuentas de erogación" domain="[('recurso_erogacion','=','erogacion')]"/>
+                <separator/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_by_recurso_erogacion" string="Recurso/Erogación" context="{'group_by':'recurso_erogacion'}"/>
+                    <filter name="group_by_budget_id" string="Presupuesto" context="{'group_by':'budget_id'}"/>
+                    <filter name="group_by_accounts_ids" string="Cuenta" context="{'group_by':'accounts_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+  <!-- GRAPH VIEW -->
+    <record model="ir.ui.view" id="view_budget_line_graph">
+      <field name="name">pa.budget.lines.graph</field>
+      <field name="model">pa.budget.lines</field>
+      
+      <field name="arch" type="xml">
+        <graph string="Líneas de presupuesto">
+		
+          <field name="accounts_ids"/>
+          <field name="monto" type="measure"/>
+        </graph>
+      </field>
+    </record>
+    <!-- MODIFICACIONES PRESUPUESTARIAS -->
+    <record id="pa_view_pa_budget_lines_history_filter" model="ir.ui.view">
+        <field name="name">pa.budget.lines.history.select</field>
+        <field name="model">pa.budget.lines.history</field>
+        <field name="arch" type="xml">
+            <search string="Modificaciones de presupuesto">
+				<field name="budget_line"/>
+                <field name="accounts_ids" string="Cuentas"/>
+                <field name="budget_id" string="Presupuesto"/>  
+                <field name="monto"/>
+                <filter name="lineas_nuevas" string="Nuevas líneas" domain="[('accion','=','nueva')]"/>
+                <filter name="lineas_modificadas" string="Líneas Modificadas" domain="[('accion','=','modificacion')]"/>
+                <filter name="lineas_eliminadas" string="Líneas Eliminadas" domain="[('accion','=','eliminacion')]"/>
+            </search>
+        </field>
+    </record>  
+    <record id="pa_view_budget_lines_history_tree" model="ir.ui.view">
+        <field name="name">pa.budget.lines.history.tree</field>
+        <field name="model">pa.budget.lines.history</field>
+        <field name="arch" type="xml">
+             <tree edit="false" create="false">
+                <field name="proceso_id"/>
+                <field name="write_date" string="Actualizado"/>
+                <field name="write_uid" string="Actualizado por"/>
+                <field name="accion"/>
+                <field name="budget_id"/>
+				<field name="budget_line"/>
+                <field name="accounts_ids" widget='many2many_tags'/>
+                <field name="monto"/>
+            </tree>
+        </field>
+    </record>    
+    <record id="pa_budget_lines_history_action" model="ir.actions.act_window">
+        <field name="name">Modificaciones</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pa.budget.lines.history</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="pa_view_budget_lines_history_tree"/>
+        <field name="context">{}</field>
+    </record>
+  
+      <record id="pa_view_budget_lines_tree" model="ir.ui.view">
+        <field name="name">pa.budget.lines.tree</field>
+        <field name="model">pa.budget.lines</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="budget_id"/>
+				<field name="name"/>
+                <field name="accounts_ids" widget='many2many_tags'/>
+                <field name="monto"/>
+                <field name="comprado"/>
+                <field name="ejecutado"/>
+                <field name="saldo"/>
+                <!-- button string="Historial" 
+                        class="oe_inline oe_stat_button"
+                        type="action" 
+                        name="%(pa_budget_lines_history_action)d" 
+                        context="{'search_default_budget_line_id': active_id, 'default_budget_line_id': active_id}"                        
+                        widget="statinfo" 
+                        icon="fa-history">
+                </button -->  
+            </tree>
+        </field>
+    </record>
+    <record id="pa_view_budget_lines_tree" model="ir.ui.view">
+        <field name="name">pa.budget.lines.tree</field>
+        <field name="model">pa.budget.lines</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="budget_id"/>
+				<field name="name"/>
+                <field name="accounts_ids" widget='many2many_tags'/>
+                <field name="monto"/>
+                <field name="comprado"/>
+                <field name="ejecutado"/>
+                <field name="saldo"/>
+                <!-- button string="Historial" 
+                        class="oe_inline oe_stat_button"
+                        type="action" 
+                        name="%(pa_budget_lines_history_action)d" 
+                        context="{'search_default_budget_line_id': active_id, 'default_budget_line_id': active_id}"                        
+                        widget="statinfo" 
+                        icon="fa-history">
+                </button -->  
+            </tree>
+        </field>
+    </record>
+	<!-- FORMVIEW -->
+    <record id="pa_view_budget_lines_form" model="ir.ui.view">
+        <field name="name">pa.budget.lines.form</field>
+        <field name="model">pa.budget.lines</field>
+		<field eval="1" name="priority"/>
+		<field name="arch" type="xml">
+			<form string="Línea de presupuesto">
+				<sheet string="Línea de presupuesto">
+					<group>
+                      
+						<field name="budget_id" options="{'no_create_edit': True}"/>
+						<field name="name"/>
+                        <field name="accounts_ids" options="{'no_create_edit': True}" widget='many2many_tags'/>
+                        <field name="recurso_erogacion"/>
+					</group>                      
+ 					<group>                     
+                        <field name="monto" widget="monetary"/>
+                        <field name="comprado" widget="monetary"/>
+                        <field name="ejecutado" widget="monetary"/>
+                        <field name="saldo" widget="monetary"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>    
+    <record id="pa_budget_lines_action" model="ir.actions.act_window">
+        <field name="name">Líneas de presupuesto</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pa.budget.lines</field>
+        <field name="view_mode">form,tree,graph,pivot</field>
+        <field name="view_id" ref="pa_view_budget_lines_tree"/>
+        <!-- field name="domain">[('accounts_ids.recurso_erogacion','=','recurso')]</field>
+        <field name="context">{'accounts_ids.recurso_erogacion':'recurso'}</field -->
+        <field name="search_view_id" ref="pa_view_pa_budget_lines_filter"/>      
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click para un nuevo registro de líneas de presupuesto.
+              </p>
+            </field>
+        <!-- field name="domain">[]</field -->
+        <!-- field name="context">{}</field -->
+    </record>
+    <!-- boton cuentas presupuesto -->
+    <record id="pa_cuentas_budget" model="ir.ui.view">
+        <field name="name">pa.cuentas_budget_button</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form" />
+        <field name="priority" eval="30"/>
+        <!-- field name="groups_id" eval="[(4, ref('base.group_sale_salesman'))]"/ -->
+        <field name="arch" type="xml">
+            <!-- field name="user_type_id" position="before">
+		        <field name="posicion_presupuestaria"/>
+            </field -->  
+            <field name="deprecated" position="after">
+                <button class="oe_inline oe_stat_button" 
+                    type="action" 
+                    name="%(pa_budget_lines_action)d" 
+                    string="Presupuestos por año" 
+                    widget="statinfo"
+                    context="{'search_default_account_id': active_id,'default_account_id': active_id}"                             
+                    icon="fa-strikethrough"> 
+                    <!-- field string="Tasas/Servicios" name="product_product_count" widget="statinfo" -->
+                </button>     
+            </field>        
+        </field>
+    </record>
+
+    <menuitem 
+        id="pa_menu_budget_lines" 
+        action="pa_budget_lines_action"
+        name="Líneas de presupuesto"
+        parent="pa_menu_cuentas_presupuestarias" 
+        groups="pa_group_usuario"                  
+        sequence="20"
+    />
+    <!-- COMPENSACIONES PRESUPUESTARIAS -->
+    
+    <!-- SEARCH VIEW -->
+    <record id="pa_view_budget_compensacion_filter" model="ir.ui.view">
+        <field name="name">pa.budget.compensacion.select</field>
+        <field name="model">pa.budget.compensacion</field>
+        <field name="arch" type="xml">
+            <search string="Cuentas">
+                <field name="budget_id" string="Presupuesto"/>
+                <field name="document_id" string="Documento"/>
+                <field name="budget_line_id_origen" string="Cuenta origen"/>
+                <field name="budget_line_id_destino" string="Cuenta destino"/>
+                <separator/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_by_budget_id" string="Presupuesto" context="{'group_by':'budget_id'}"/>
+                    <filter name="group_by_documen_id_id" string="Documento relacionado" context="{'group_by':'document_id'}"/>
+                    <filter name="group_by_budget_line_id_origen" string="Cuentas origen" context="{'group_by':'budget_line_id_origen'}"/>
+                    <filter name="group_by_budget_line_id_destino" string="Cuentas destino" context="{'group_by':'budget_line_id_destino'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+        
+    <record id="pa_view_budget_compensacion_tree" model="ir.ui.view">
+        <field name="name">pa.budget.compensacion.tree</field>
+        <field name="model">pa.budget.compensacion</field>
+        <field name="arch" type="xml">
+            <tree edit="false" create="false">
+                <field name="budget_id"/>
+                <field name="document_id"/>
+                <field name="budget_line_id_origen"/>
+                <field name="monto_budget_line_origen" widget="monetary"/>
+                <field name="saldo_budget_line_origen" widget="monetary"/>
+                <field name="budget_line_id_destino"/>
+                <field name="monto_budget_line_destino" widget="monetary"/>
+                <field name="saldo_budget_line_destino" widget="monetary"/>
+                <field name="monto" widget="monetary"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="pa_budget_compensacion_action" model="ir.actions.act_window">
+        <field name="name">Erogación: Compensación de presupuesto</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pa.budget.compensacion</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="pa_view_budget_compensacion_tree"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+    <!-- boton compensacion origen presupuesto -->
+    <record id="pa_cuentas_compensacion_origen" model="ir.ui.view">
+        <field name="name">pa.cuentas_compensacion_origen_button</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form" />
+<!--         <field name="domain">[('deprecated', '=', False),('posicion_presupuestaria', '=', 'erogacion')]</field>
+ -->        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <field name="deprecated" position="after">
+                <button class="oe_inline oe_stat_button" 
+                    type="action" 
+                    name="%(pa_budget_compensacion_action)d" 
+                    string="Compensaciones origen" 
+                    widget="statinfo" 
+                    context="{'search_default_budget_line_id_origen': active_id,'default_budget_line_id_origen': active_id}"
+                    icon="fa-balance-scale"> 
+                </button>     
+            </field>        
+        </field>
+    </record>
+  
+    <!-- DOCUMENTOS -->
+    
+    <!-- SEARCH VIEW -->
+    <record id="pa_view_budget_document_filter" model="ir.ui.view">
+        <field name="name">pa.budget.document.select</field>
+        <field name="model">pa.budget.document</field>
+        <field name="arch" type="xml">
+            <search string="Cuentas">
+                <field name="numero" string="Número"/>
+                <field name="documento_tipo" string="Tipo de documento"/>
+                <field name="fiscalyear_id" string="Año"/>
+                <separator/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_by_numero" string="Número" context="{'group_by':'numero'}"/>
+                    <filter name="group_by_documento_tipo" string="Tipo de documento" context="{'group_by':'documento_tipo'}"/>
+                    <filter name="group_by_fiscalyear_id" string="Año" context="{'group_by':'fiscalyear_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+	<!-- FORMVIEW -->
+    <record id="pa_view_budget_document_form" model="ir.ui.view">
+        <field name="name">pa.budget.document.form</field>
+        <field name="model">pa.budget.document</field>
+		<field eval="1" name="priority"/>
+		<field name="arch" type="xml">
+			<form string="Documentos">
+				<sheet string="Documentos">
+					<group col="4">
+						<field name="numero"/>
+						<field name="documento_tipo" options="{'no_create_edit': True}"/>
+						<field name="fiscalyear_id" options="{'no_create_edit': True}"/>
+					</group>
+					<group col="4">
+						<field name="attachment_ids" widget="many2many_binary" string="Adjuntar" nolabel="1" colspan="2"/>
+					</group>
+					<group col="2">
+						<field name="documento" colspan="2"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>    
+	<!-- TREEVIEW -->    
+    <record id="pa_view_budget_document_tree" model="ir.ui.view">
+        <field name="name">pa.budget.document.tree</field>
+        <field name="model">pa.budget.document</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="fiscalyear_id"/>
+                <field name="documento_tipo"/>
+                <field name="numero"/>
+            </tree>
+        </field>
+    </record>
+    <record id="pa_budget_document_action" model="ir.actions.act_window">
+        <field name="name">Documentos</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pa.budget.document</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="pa_view_budget_document_tree"/>
+        <field name="search_view_id" ref="pa_view_budget_document_filter"/>      
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click para un nuevo registro de documento.
+              </p>
+            </field>
+      </record>
+	<!-- TREEVIEW -->    
+    <record id="pa_view_budget_tree" model="ir.ui.view">
+        <field name="name">pa.budget.tree</field>
+        <field name="model">pa.budget</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="fiscalyear_id"/>
+                <field name="document_id"/>
+            </tree>
+        </field>
+    </record>    
+    <record id="pa_budget_action" model="ir.actions.act_window">
+        <field name="name">Presupuestos</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pa.budget</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="pa_view_budget_tree"/>
+        <!-- field name="search_view_id" ref="pa_view_budget_document_filter"/ -->     
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click para un nuevo registro de presupuesto.
+              </p>
+            </field>
+    </record>    
+    <menuitem 
+        name="Presupuestos"
+        action="pa_budget_action" 
+        id="pa_menu_presupuestos" 
+        parent="pa_menu_configuracion_contabilidad_presupuestaria" 
+        groups="pa_group_usuario,pa_group_direccion_director"                  
+        sequence="20"
+    />
+      
+    <menuitem 
+        name="Documentos"
+        action="pa_budget_document_action" 
+        id="pa_menu_documentos" 
+        parent="pa_menu_configuracion_contabilidad_presupuestaria" 
+        groups="pa_group_usuario,pa_group_direccion_director"                  
+        sequence="40"
+    />
+
+    <menuitem 
+        id="pa_menu_budget_compensacion" 
+        action="pa_budget_compensacion_action"
+        name="Erogación: Compensación de presupuesto"
+        parent="pa_menu_cuentas_presupuestarias" 
+        groups="pa_group_usuario,pa_group_direccion_director"                  
+        sequence="20"
+    />
+    <menuitem 
+        id="pa_menu_budget_modificacion" 
+        action="pa_budget_lines_history_action"
+        name="Modificación del presupuesto"
+        parent="pa_menu_cuentas_presupuestarias" 
+        groups="pa_group_usuario,pa_group_direccion_director"                  
+        sequence="25"
+    />    
+ </odoo>

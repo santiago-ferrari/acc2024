@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+<record model="ir.module.category" id="pa_module_category_public_budget">
+    <field name="name">Administración Pública</field>
+    <field name="description">Administración pública para entidades del Estado</field>
+    <field name="sequence">1</field>
+    <field name="parent_id" ref="base.group_user"/>
+</record>
+    <record model="ir.module.category" id="pa_administracion_publica">
+        <field name="name">Administración Pública</field>
+        <field name="description">Administración Pública</field>
+        <field name="sequence">1</field>
+        <field name="parent_id" ref="pa_module_category_public_budget"/>
+    </record>
+        <record id="pa_group_usuario" model="res.groups">
+            <field name="name">Usuario administración pública</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="pa_administracion_publica"/>
+            <!-- field name="implied_ids" eval="[(4,ref('base.group_user'))]"/ -->
+        </record>
+        <record id="pa_group_direccion_director" model="res.groups">
+            <field name="name">Director administración pública</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="pa_administracion_publica"/>
+            <!-- field name="implied_ids" eval="[(4,ref('base.group_user'))]"/ -->
+    	</record>
+    </data>
+</openerp>

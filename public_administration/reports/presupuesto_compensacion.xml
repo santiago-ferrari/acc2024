@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<report
+    id="pa_report_compensacion_presupuesto"
+    model="pa.budget.compensacion"
+    string="Compensación presupuestaria"
+    report_type="qweb-pdf"
+    name="public_administration.compensacion_presupuesto"
+    paperformat="public_administration.pa_A4_paper_format"/>         
+
+
+<template id="public_administration.compensacion_presupuesto">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <table style="font-size: 11px;" class="tabla" width="100%">
+                      <br></br><br></br>
+                        <tr style="border-left: thin solid lightGrey; border-top: thin solid lightGrey; border-bottom: thin solid lightGrey; border-right: thin solid lightGrey; padding-right: 3px;padding-left: 3px;padding-top: 3px;padding-bottom:3px;">
+                            <td colspan="2" align="center" width="100%" style="border-left: thin solid lightGrey; border-top: thin solid lightGrey; border-bottom: thin solid lightGrey; border-right: thin solid lightGrey; padding-right: 3px;padding-left: 3px;padding-top: 3px;padding-bottom:3px;">
+                                <b>
+                                    <h4><span t-esc="o.document_id.numero"/>/<span t-esc="o.document_id.fiscalyear_id.name"/></h4><span><h5>Fecha</h5></span><h5><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/></h5>
+                                </b>                        
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <p><b>VISTO:</b></p>
+                    Lo autorizado por la Resolución General de Presupuesto en la cual faculta al Departamento Ejecutivo a compensar las partidas del Presupuesto General de Gastos Vigente;
+                    
+
+                    <b> Y CONSIDERANDO:</b>
+                    Que, es necesario a esta altura del Ejercicio Económico Compensar las Partidas del Presupuesto de Gastos Vigente al resultar insuficientes los Créditos originales;
+                    y que existen excedentes en otras Partidas que nos permiten efectuar las compensasiones necesarias, las que NO modifican el total del Presupuesto General de Gastos y Cálculo de Recursos del Ejercicio;
+                    
+                    En uso de sus atribuciones, el PRESIDENTE COMUNAL
+                    
+
+                    <b>R E S U E L V E:</b>
+                    <b>Art. 1°:</b>
+                    COMPENSASE las Partidas del Presupuesto de Gastos conforme al siguiente detalle:
+                    <div>
+                        <table style="font-size: 11px;" class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Partida origen</th>
+                                    <th class="text-right">Presupuestado origen</th>
+                                    <th class="text-right">Balance origen</th>
+                                    <th class="text-right">Monto transferido</th>
+                                    <th>Partida destino</th>
+                                    <th class="text-right">Presupuestado destino</th>
+                                    <th class="text-right">Balance destino</th>
+                                </tr>
+                            </thead>
+                            <tbody class="invoice_tbody">
+                                <!-- tr><t t-set="pto_vigente_origen" t-value="o.saldo_budget_line_origen + o.monto"/>
+                                    <td><span t-field="o.budget_line_id_destino.account_id.code"/></td>
+                                    <td><span t-field="o.budget_line_id_destino.account_id.name"/></td>
+                                    <td><span t-field="o.saldo_budget_line_origen"/></td>
+                                    <td><span t-field="o.monto"/></td>
+                                    
+                                </tr -->
+                                <tr>
+                                    <td><span t-field="o.budget_line_id_origen.account_id.code"/> - <span t-field="o.budget_line_id_origen.account_id.name"/></td>
+                                    <td><span t-field="o.monto_budget_line_origen"/></td>
+                                    <td><span t-field="o.saldo_budget_line_origen"/></td>
+                                    <td><span t-field="o.monto"/></td>
+                                    <td><span t-field="o.budget_line_id_destino.account_id.code"/> - <span t-field="o.budget_line_id_destino.account_id.name"/></td>
+                                    <td><span t-field="o.monto_budget_line_destino"/></td>
+                                    <td><span t-field="o.saldo_budget_line_destino"/></td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+              </div>
+            </t>
+        </t>
+    </t>
+
+</template>
+</data>
+</odoo>

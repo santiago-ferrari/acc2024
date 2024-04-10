@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<report
+    id="pa_presupuesto"
+    model="pa.budget.lines"
+    string="Presupuesto"
+    report_type="qweb-pdf"
+    name="public_administration.presupuesto"
+    paperformat="public_administration.pa_A4_paper_format_apaisada"
+/>
+<template id="public_administration.presupuesto">
+    <t t-call="web.internal_layout">
+    <t t-call="web.html_container">
+        <t t-set="data_report_margin_top" t-value="12"/>
+        <t t-set="data_report_header_spacing" t-value="9"/>
+        <t t-set="data_report_dpi" t-value="110"/>      
+        <!--t t-foreach="docs" t-as="o" -->
+            <div class="page">
+                <h2></h2>
+                <h2><span t-esc="titulo"/></h2>
+                <t t-if="presupuesto_recursos">
+                    <table class="table table-condensed">
+                        <thead>
+                            <th><strong>Código</strong></th>
+                            <th><strong>Descripción</strong></th>
+                            <th><strong>Subrubro</strong></th>
+                            <th><strong>Rubro</strong></th>
+                            <th><strong>Item</strong></th>
+                            <th><strong>Inciso</strong></th>
+                            <th><strong>Anexo</strong></th>
+                        </thead>
+                        
+                        <tbody>
+                            <tr style="font-size: 10px;" t-foreach="presupuesto_recursos" t-as="l">
+								<t t-if="l['vista']==True">
+									<td><strong><span t-esc="l['codigo']"/></strong></td>
+									<td><strong><span t-esc="l['descripcion']"/></strong></td>
+								</t>
+								<t t-if="l['vista']!=True">
+									<td><span t-esc="l['codigo']"/></td>
+									<td><span t-esc="l['descripcion']"/></td>
+								</t>
+                                <td><span t-esc="l['subrubro']"/></td>
+                                <td><span t-esc="l['rubro']"/></td>
+                                <td><span t-esc="l['item']"/></td>
+                                <td><span t-esc="l['inciso']"/></td>
+                                <td><span t-esc="l['anexo']"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+                <t t-if="presupuesto_erogaciones">
+                    <table class="table table-condensed">
+                        <thead>
+                            <th><strong>Código</strong></th>
+                            <th><strong>Descripción</strong></th>
+                            <th><strong>Categoría</strong></th>
+                            <th><strong>Cargo</strong></th>
+                            <th><strong>Mensual</strong></th>
+                            <th><strong>Anual</strong></th>
+                            <th><strong>Sub-Partida</strong></th>
+                            <th><strong>Partida</strong></th>
+                            <th><strong>Sub-Item</strong></th>
+                            <th><strong>Item</strong></th>
+                            <th><strong>Part. Pal.</strong></th>
+                            <th><strong>Inciso</strong></th>
+                            <th><strong>Anexo</strong></th>
+                        </thead>
+
+                        <tbody>
+                            <tr style="font-size: 10px;" t-foreach="presupuesto_erogaciones" t-as="l">
+								<t t-if="l['vista']==True">
+									<td><strong><span t-esc="l['codigo']"/></strong></td>
+									<td><strong><span t-esc="l['descripcion']"/></strong></td>
+								</t>
+								<t t-if="l['vista']!=True">
+									<td><span t-esc="l['codigo']"/></td>
+									<td><span t-esc="l['descripcion']"/></td>
+								</t>
+                                <td><span t-esc="l['categoria_empleado']"/></td>
+                                <td><span t-esc="l['cargo_empleado']"/></td>
+                                <td><span t-esc="l['importe_mensual_empleado']"/></td>
+                                <td><span t-esc="l['importe_anual_empleado']"/></td>
+                                <td><span t-esc="l['sub_partida']"/></td>
+                                <td><span t-esc="l['partida']"/></td>
+                                <td><span t-esc="l['sub_item']"/></td>
+                                <td><span t-esc="l['item']"/></td>
+                                <td><span t-esc="l['part_pal']"/></td>
+                                <td><span t-esc="l['inciso']"/></td>
+                                <td><span t-esc="l['anexo']"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+                <t t-if="ejecucion_recursos">
+                    <table class="table table-condensed">
+                        <thead>
+                            <th><strong>Código</strong></th>
+                            <th><strong>Descripción</strong></th>
+                            <th><strong>Presupuestado</strong></th>
+                            <!-- th><strong>Recaudado mes actual</strong></th -->
+                            <th><strong>Recaudado al <span t-esc="data['form']['date_end']"/></strong></th>
+                            <th><strong>En menos</strong></th>
+                            <th><strong>En más</strong></th>
+                            <th><strong>% Recaudado</strong></th>
+                        </thead>
+                        <tbody>
+                            <tr style="font-size: 10px;" t-foreach="ejecucion_recursos" t-as="l">
+								<t t-if="l['vista']==True">
+									<td><strong><span t-esc="l['codigo']"/></strong></td>
+									<td><strong><span t-esc="l['descripcion']"/></strong></td>
+								</t>
+								<t t-if="l['vista']!=True">
+									<td><span t-esc="l['codigo']"/></td>
+									<td><span t-esc="l['descripcion']"/></td>
+								</t>
+                                <td><span t-esc="l['calculo_recursos']"/></td>
+                                <!-- td><span t-esc="l['recaudado_mes']"/></td -->
+                                <td><span t-esc="l['recaudado_acumulado']"/></td>
+                                <td><span t-esc="l['diferencia_acumulada_menos']"/></td>
+                                <td><span t-esc="l['diferencia_acumulada_mas']"/></td>
+                                <td><span t-esc="l['porcentaje_recaudacion']"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+                <t t-if="ejecucion_erogaciones">
+                    <table class="table table-condensed">
+                        <thead>
+                            <th><strong>Código</strong></th>
+                            <th><strong>Descripción</strong></th>
+                            <th><strong>Presupuesto Autorizado</strong></th>
+                            <!-- th><strong>Imputado en mes</strong></th -->
+                            <th><strong>Imputado al <span t-esc="data['form']['date_end']"/></strong></th>
+                            <th><strong>Disponible</strong></th>
+                            <th><strong>% Imputado</strong></th>
+                            <!-- th><strong>Pagado en mes</strong></th>
+                            <th><strong>Acumulado</strong></th>
+                            <th><strong>Saldo a pagar</strong></th>
+                            <th><strong>% Pag.</strong></th -->
+                        </thead>
+                        <tbody>
+                            <tr style="font-size: 10px;" t-foreach="ejecucion_erogaciones" t-as="l">
+								<t t-if="l['vista']==True">
+									<td><strong><span t-esc="l['codigo']"/></strong></td>
+									<td><strong><span t-esc="l['descripcion']"/></strong></td>
+								</t>
+								<t t-if="l['vista']!=True">
+									<td><span t-esc="l['codigo']"/></td>
+									<td><span t-esc="l['descripcion']"/></td>
+								</t>
+                                <td><span t-esc="l['presupuesto_autorizado']"/></td>
+                                <!-- td><span t-esc="l['imputado_mes']"/></td -->
+                                <td><span t-esc="l['imputado_acumulado']"/></td>
+                                <td><span t-esc="l['disponible']"/></td>
+                                <td><span t-esc="l['porcentaje_imputado']"/></td>
+                                <!-- td><span t-esc="l['pagado_mes']"/></td>
+                                <td><span t-esc="l['pagado_acumulado']"/></td>
+                                <td><span t-esc="l['saldo_a_pagar']"/></td>
+                                <td><span t-esc="l['porcentaje_pagado']"/></td -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

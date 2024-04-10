@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="pa_create_compensacion_presupuesto" model="ir.ui.view">
+            <field name="name">Generar compensación de presupuesto</field>
+            <field name="model">pa.budget.compensacion.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generar compensación de presupuesto">
+                    <p class="alert alert-info" role="alert" style="margin-bottom:0px;">
+                        Se listan las partidas de erogación origen con saldo positivo y las partidas de erogación destino con saldo negativo o cero.
+                    </p>                
+                    <group>
+                       <field name="budget_id" options="{'no_create_edit': True}"/>
+                       <field name="document_id" options="{'no_create_edit': True}"/>
+                    </group>                
+                    <group>
+                       <field name="budget_line_id_origen" options="{'no_create_edit': True}"/>
+                       <field name="monto_budget_line_origen" options="{'no_create_edit': True}"  widget="monetary"/>
+                       <field name="saldo_budget_line_origen" options="{'no_create_edit': True}"  widget="monetary"/>
+                    </group>                
+                    <group>
+                       <field name="budget_line_id_destino" options="{'no_create_edit': True}"/>
+                       <field name="monto_budget_line_destino" options="{'no_create_edit': True}" widget="monetary"/>
+                       <field name="saldo_budget_line_destino" options="{'no_create_edit': True}" widget="monetary"/>
+                       <field name="monto"  widget="monetary"/>
+                    </group>
+                    <footer>
+                        <button name="create_compensacion_presupuesto" string="Generar" type="object" default_focus="1" class="oe_highlight"/>
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>        
+            </field>
+        </record>
+
+		<record id="create_compensacion_presupuesto_action_pa" model="ir.actions.act_window">
+			<field name="name">Generar compensación de presupuesto</field>
+			<field name="res_model">pa.budget.compensacion.wizard</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="pa_create_compensacion_presupuesto" />
+			<field name="target">new</field>
+		</record>			
+        <menuitem 
+            id="pa_create_compensacion_presupuesto_menu"
+            action="create_compensacion_presupuesto_action_pa" 
+            parent="pa_menu_cuentas_presupuestarias" 
+            groups="pa_group_direccion_director"
+            sequence="25"
+        />        
+    </data>
+</openerp>

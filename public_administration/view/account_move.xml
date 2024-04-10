@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_move_form_pa" model="ir.ui.view">
+        <field name="model">account.move</field>
+        <field name="name">account.move.form.pa</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+		<field name="arch" type="xml">
+		
+			  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='invoice_tab']/field[@name='invoice_line_ids']/form[1]/sheet[1]/group[2]/field[@name='analytic_distribution']" position="after">
+				<field name="monto_current_budget_line"/>
+				<field name="saldo_current_budget_line"/>
+			  </xpath>
+
+			  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='invoice_tab']/field[@name='invoice_line_ids']/tree[1]/field[@name='price_unit']" position="after">
+				<field name="monto_current_budget_line" optional="show"/>
+				<field name="saldo_current_budget_line" optional="show"/>
+			  </xpath>
+			  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='aml_tab']/field[@name='line_ids']/tree[1]/field[@name='credit']" position="after">
+				<field name="monto_current_budget_line" optional="show"/>
+				<field name="saldo_current_budget_line" optional="show"/>
+			  </xpath>
+
+			</field>
+    </record>
+</odoo>
