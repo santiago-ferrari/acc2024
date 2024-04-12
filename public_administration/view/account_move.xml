@@ -6,15 +6,21 @@
 		<field name="arch" type="xml">
 		
 			  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='invoice_tab']/field[@name='invoice_line_ids']/form[1]/sheet[1]/group[2]/field[@name='analytic_distribution']" position="after">
+				<!-- <field name="pa_budget_account_id" domain="[('id','in',(product_id.pa_budget_accounts_ids))]"/> -->
+
+				<field name="budget_line_id"/>
 				<field name="monto_current_budget_line"/>
 				<field name="saldo_current_budget_line"/>
+
 			  </xpath>
 
 			  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='invoice_tab']/field[@name='invoice_line_ids']/tree[1]/field[@name='price_unit']" position="after">
+				<field name="budget_line_id"/>
 				<field name="monto_current_budget_line" optional="show"/>
 				<field name="saldo_current_budget_line" optional="show"/>
 			  </xpath>
 			  <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='aml_tab']/field[@name='line_ids']/tree[1]/field[@name='credit']" position="after">
+				<field name="budget_line_id"/>
 				<field name="monto_current_budget_line" optional="show"/>
 				<field name="saldo_current_budget_line" optional="show"/>
 			  </xpath>

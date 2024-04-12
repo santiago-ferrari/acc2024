@@ -23,17 +23,6 @@
             </field>
         </record>
 
-       <act_window
-            id="pa_action_report_presupuesto"
-            name='Reporte de contabilidad presupuestaria'
-            view_mode = "form"
-            res_model="pa.wizard_report_presupuesto"
-            target="new"/>
 
-        <menuitem id="pa_menu_report_presupuesto"
-			parent="pa_menu_cuentas_presupuestarias"
-			action="pa_action_report_presupuesto"
-            groups="pa_group_usuario,pa_group_direccion_director"
-			sequence="40"/>
     </data>
 </openerp>

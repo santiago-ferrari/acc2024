@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-import odoo.addons.decimal_precision as dp
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -28,11 +26,45 @@ class Presupuesto(models.Model):
         required=True,
     )
     
+class CuentaPresupuesto(models.Model):
+
+    _name = "pa.budget.account"
+    _description = u"Cuenta presupuestaria"
+    
+    # _parent_name = "parent_id"
+    # _parent_store = True
+    # _parent_order = 'code, name'
+    #_order = 'parent_left'     
+    
+    code = fields.Char(u'Código')
+    
+    name = fields.Char('Nombre')
+    
+    recurso_erogacion = fields.Selection([('erogacion','Erogación'),('recurso','Recurso')],
+        string = u'Recurso/Erogación',
+        default = 'erogacion',
+        required=True
+    ) 
+
+    parent_id = fields.Many2one('pa.budget.account','Cuenta padre',ondelete="set null")
+    child_ids = fields.One2many('pa.budget.account','parent_id', 'Cuentas hijas')
+    #parent_left = fields.Integer('Left Parent', index=1)
+    #parent_right = fields.Integer('Right Parent', index=1)
+    
+    
+   
+
 class LineasPresupuesto(models.Model):
 
     _name = "pa.budget.lines"
     _description = u"Líneas de presupuesto"
     _order = 'budget_id, name DESC'
+    _rec_name = 'account_id'
+    
+    # def compute_name(self):
+        # for line in self:
+            # return line.account_id.name +' - '+ line.budget_id.fiscalyear_id.name
+
     
     def compute_comprado(self):
         for line in self: 
@@ -50,21 +82,65 @@ class LineasPresupuesto(models.Model):
                 
             else: line.comprado =0
             
-    def compute_comprado_facturado(self):
-        for line in self: 
-            pol = self.env['purchase.order.line'].read_group(
-            [('invoice_lines.parent_state','=','posted'),
-            ('state','in',['purchase','done']),
-            ('budget_line_id','=',line.id),
-            ('date_approve','>=',line.budget_id.fiscalyear_id.date_start),
-            ('date_approve','<=',line.budget_id.fiscalyear_id.date_end)],
-            ['price_total','price_total:sum'],['price_total']) 
-            logger.warning('pol adolfo '+str(pol))
-            comprado_y_facturado =0
-            if len(pol)>0: 
-                for dict_pol in pol:
-                    comprado_y_facturado += dict_pol['price_total']
-            return comprado_y_facturado
+    def compute_facturado(self):
+        for line in self:
+            balance = 0.0
+            credit = 0.0
+            debit = 0.0        
+            for aml in self.env['account.move.line'].search([('payment_id','=',False),('budget_line_id','=',line.id),('date','>=',line.budget_id.fiscalyear_id.date_start),('date','<=',line.budget_id.fiscalyear_id.date_end)]):
+                _logger.warning('aml adolfo '+str(aml.debit))                
+                #si tiene impuestos, si es factura
+                if aml.price_total >0: credit += aml.price_total
+                #si es asiento pero no factura
+                if aml.price_total == 0: credit += aml.credit                
+                
+                if aml.price_total > 0: debit += aml.price_total
+                if aml.price_total == 0: debit += aml.debit            
+
+                # credit += aml.credit
+                # debit += aml.debit
+                    
+            if line.recurso_erogacion == 'recurso': 
+                line.facturado_erogacion = credit
+                line.facturado_recurso = debit
+            if line.recurso_erogacion == 'erogacion': 
+                line.facturado_erogacion = debit            
+                line.facturado_recurso = credit
+            
+    def compute_ejecutado(self):
+        for line in self:
+            balance = 0.0
+            credit = 0.0
+            debit = 0.0  
+            pagado =0
+            for aml in self.env['account.move.line'].search([('payment_id','!=',False),('budget_line_id','=',line.id),('date','>=',line.budget_id.fiscalyear_id.date_start),('date','<=',line.budget_id.fiscalyear_id.date_end)]):
+                pagado=0
+                if aml.payment_id:
+                    _logger.warning('aml ejecutado adolfo '+str(aml.debit))                
+                    pagado = aml.payment_id.amount
+
+                    
+            if line.recurso_erogacion == 'recurso': 
+                line.ejecutado = pagado
+            if line.recurso_erogacion == 'erogacion': 
+                line.ejecutado = -1*pagado
+                
+            
+    # def compute_comprado_facturado(self):
+        # for line in self: 
+            # pol = self.env['purchase.order.line'].read_group(
+            # [('invoice_lines.parent_state','=','posted'),
+            # ('state','in',['purchase','done']),
+            # ('budget_line_id','=',line.id),
+            # ('date_approve','>=',line.budget_id.fiscalyear_id.date_start),
+            # ('date_approve','<=',line.budget_id.fiscalyear_id.date_end)],
+            # ['price_total','price_total:sum'],['price_total']) 
+            # logger.warning('pol adolfo '+str(pol))
+            # comprado_y_facturado =0
+            # if len(pol)>0: 
+                # for dict_pol in pol:
+                    # comprado_y_facturado += dict_pol['price_total']
+            # return comprado_y_facturado
             
     def compute_balance(self):
     
@@ -72,7 +148,7 @@ class LineasPresupuesto(models.Model):
             balance = 0.0
             credit = 0.0
             debit = 0.0        
-            for aml in self.env['account.move.line'].search([('account_id','in',line.accounts_ids.ids),('date','>=',line.budget_id.fiscalyear_id.date_start),('date','<=',line.budget_id.fiscalyear_id.date_end)]):
+            for aml in self.env['account.move.line'].search([('budget_line_id','=',line.id),('date','>=',line.budget_id.fiscalyear_id.date_start),('date','<=',line.budget_id.fiscalyear_id.date_end)]):
                 _logger.warning('aml adolfo '+str(aml.debit))                
                 #si tiene impuestos, si es factura
                 if aml.price_total >0: credit += aml.price_total
@@ -90,7 +166,7 @@ class LineasPresupuesto(models.Model):
             if line.recurso_erogacion == 'erogacion': 
                 line.ejecutado = debit
                 
-            line.saldo = line.monto-line.ejecutado-line.comprado
+            line.saldo = line.monto-line.ejecutado
             
     budget_id = fields.Many2one(
         comodel_name='pa.budget',
@@ -106,19 +182,29 @@ class LineasPresupuesto(models.Model):
         readonly=True
         )
     name = fields.Char('Partida', 
-        required=True
-        )   
-    accounts_ids = fields.Many2many(
+        #compute="compute_name"
+        )
+    accounts_ids = fields.Many2one(
         comodel_name='account.account',
         #inverse='budget_line_id'
         string='Cuenta', 
         domain="[('deprecated', '=', False)]",
+        required=False,
+        )        
+    account_id = fields.Many2one(
+        string='Cuenta presupuestaria',
+        comodel_name='pa.budget.account',
         required=True,
         )        
-    recurso_erogacion = fields.Selection([('erogacion','Erogación'),('recurso','Recurso')],
-        string = u'Recurso/Erogación',
+    # recurso_erogacion = fields.Selection([('erogacion','Erogación'),('recurso','Recurso')],
+        # string = u'Recurso/Erogación',
+        # default = 'erogacion',
+        # required=True
+    # )
+    recurso_erogacion = fields.Selection(related='account_id.recurso_erogacion',
         default = 'erogacion',
-        required=True
+        required=True,
+        store=True
     )
  
     monto = fields.Float(
@@ -128,10 +214,18 @@ class LineasPresupuesto(models.Model):
     comprado = fields.Float(
         'Comprado',
         compute = "compute_comprado",
-        )         
+        )
+    facturado_recurso  = fields.Float(
+        'Facturado recurso',
+        compute = "compute_facturado",
+        )
+    facturado_erogacion = fields.Float(
+        u'Facturado erogación',
+        compute = "compute_facturado",
+        )        
     ejecutado = fields.Float(
         'Ejecutado',
-        compute = "compute_balance",
+        compute = "compute_ejecutado",
         )    
     saldo = fields.Float(
         'Saldo',
@@ -139,7 +233,7 @@ class LineasPresupuesto(models.Model):
         store=True
         )
 
-    _sql_constraints = [('budget_line_uniq','UNIQUE (budget_id,accounts_ids)',u'La cuenta debe ser única por presupuesto')
+    _sql_constraints = [('budget_line_uniq','UNIQUE (budget_id,account_id)',u'La cuenta debe ser única por presupuesto')
                        ,('monto_mayor_cero','CHECK (monto >= 0)','El monto debe ser mayor o igual a cero'),]
     
     
@@ -153,25 +247,36 @@ class LineasPresupuesto(models.Model):
     def create(self, values):
         line =  super(LineasPresupuesto, self).create(values)
         proceso_id = self.env['ir.sequence'].next_by_code('log.lineas.presupuesto')
-        self.env['pa.budget.lines.history'].create({'proceso_id':proceso_id,'budget_id':line.budget_id.id, 'budget_line':line.name,'accounts_ids':line.accounts_ids,'monto':line.monto, 'accion':'nueva'})
+        self.env['pa.budget.lines.history'].create({'proceso_id':proceso_id,'budget_id':line.budget_id.id,'account_id':line.account_id.id, 'accounts_ids':line.accounts_ids,'monto':line.monto, 'accion':'nueva'})
         return line
-    
+    def write_monto_cuentas_padres(self, cuenta, monto_anterior, nuevo_monto):
+        if cuenta == False: return False
+        if cuenta.parent_id:
+            domain = [('account_id','=',cuenta.parent_id.id), ('budget_id','=',self.budget_id.id)]            
+            for lp in self.env['pa.budget.lines'].search(domain):
+                lp.monto = lp.monto - monto_anterior + nuevo_monto
+            return cuenta.parent_id
+        else: return False
+        
     def write(self, values):
         proceso_id = self.env['ir.sequence'].next_by_code('log.lineas.presupuesto')
         if 'monto' in values and values['monto']: 
-            self.env['pa.budget.lines.history'].create({'proceso_id':proceso_id,'budget_id':self.budget_id.id, 'accounts_ids':self.accounts_ids,'monto': values['monto'], 'accion':'modificacion'})            
+            self.env['pa.budget.lines.history'].create({'proceso_id':proceso_id,'budget_id':self.budget_id.id,'account_id':self.account_id.id, 'accounts_ids':self.accounts_ids,'monto': values['monto'], 'accion':'modificacion'})            
+            cuenta_padre = self.write_monto_cuentas_padres(self.account_id,self.monto, values['monto'])
+            
             #el compute balance se hace al ultimo, una vez que se modifican las cuentas
             self.compute_balance()
+            
         if 'accounts_ids' in values and values['accounts_ids']: 
-            self.env['pa.budget.lines.history'].create({'proceso_id':proceso_id,'budget_id':self.budget_id.id, 'budget_line':self.name, 'accounts_ids':values['accounts_ids'],'monto': self.monto, 'accion':'modificacion'})
+            self.env['pa.budget.lines.history'].create({'proceso_id':proceso_id,'budget_id':self.budget_id.id,'account_id':self.account_id.id, 'accounts_ids':values['accounts_ids'],'monto': self.monto, 'accion':'modificacion'})
         if 'budget_id' in values and values['budget_id']: 
-            self.env['pa.budget.lines.history'].create({'proceso_id':proceso_id,'budget_id':values['budget_id'], 'budget_line':self.name, 'accounts_ids':self.accounts_ids,'monto': self.monto, 'accion':'modificacion'})
+            self.env['pa.budget.lines.history'].create({'proceso_id':proceso_id,'budget_id':values['budget_id'],'account_id':self.account_id.id, 'accounts_ids':self.accounts_ids,'monto': self.monto, 'accion':'modificacion'})
         return super(LineasPresupuesto, self).write(values)
 
     def unlink(self):
         proceso_id = self.env['ir.sequence'].next_by_code('log.lineas.presupuesto')
         for record in self:
-            record.env['pa.budget.lines.history'].create({'proceso_id':proceso_id,'budget_id':record.budget_id.id,'budget_line':record.name,'accounts_ids':record.accounts_ids,'monto': record.monto, 'accion':'eliminacion'})
+            record.env['pa.budget.lines.history'].create({'proceso_id':proceso_id,'budget_id':record.budget_id.id,'account_id':record.account_id.id, 'accounts_ids':record.accounts_ids,'monto': record.monto, 'accion':'eliminacion'})
         return super(LineasPresupuesto, self).unlink()                
     
 class HistorialLineasPresupuesto(models.Model):
@@ -193,14 +298,19 @@ class HistorialLineasPresupuesto(models.Model):
         # readonly=True,
         # #ondelete='set null'
         # )        
-    budget_line = fields.Char('Partida'
-        )    
+    # budget_line = fields.Char('Partida'
+        # )    
     accounts_ids = fields.Many2many(
         comodel_name='account.account',
-        string='Cuenta', 
+        string='Cuentas contable', 
         readonly=True,
         #ondelete='set null'
         )  
+    account_id = fields.Many2one(
+        comodel_name='pa.budget.account',
+        readonly=True,
+        #ondelete='set null'
+        ) 
     monto = fields.Float(
         'Presupuestado',
         readonly=True, 
@@ -273,7 +383,6 @@ class Compensaciones(models.Model):
         ) 
     saldo_budget_line_origen = fields.Float(
         'Balance origen',
-        digits=dp.get_precision('Account'),
         required=True,
         ) 
     budget_line_id_destino = fields.Many2one(
@@ -287,7 +396,6 @@ class Compensaciones(models.Model):
         )
     saldo_budget_line_destino = fields.Float(
         'Balance destino',
-        digits=dp.get_precision('Account'),
         required=True,
         )
     monto = fields.Float(

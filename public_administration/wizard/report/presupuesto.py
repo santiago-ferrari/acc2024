@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, api, exceptions, _
-from openerp.exceptions import Warning
-import openerp.addons.decimal_precision as dp
+from odoo import models, fields, api, exceptions, _
+from odoo.exceptions import Warning
+import odoo.addons.decimal_precision as dp
 import logging
 import calendar
 from datetime import date, datetime, timedelta

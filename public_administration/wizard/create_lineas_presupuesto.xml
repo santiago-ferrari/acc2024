@@ -21,20 +21,6 @@
             </field>
         </record>
 
-		<record id="create_budget_lines_action_pa" model="ir.actions.act_window">
-			<field name="name">Copiar líneas de presupuesto</field>
-			<field name="res_model">pa.create_budget_lines</field>
-			<field name="view_mode">form</field>
-			<field name="view_id" ref="pa_create_budget_lines" />
-			<field name="target">new</field>
-		</record>			
-		
-        <menuitem 
-            id="pa_create_budget_lines_menu"
-            action="create_budget_lines_action_pa" 
-            parent="pa_menu_configuracion_contabilidad_presupuestaria" 
-            groups="pa_group_usuario,pa_group_direccion_director"
-            sequence="25"
-        />        
+     
     </data>
 </openerp>

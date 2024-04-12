@@ -31,20 +31,5 @@
                 </form>        
             </field>
         </record>
-
-		<record id="create_compensacion_presupuesto_action_pa" model="ir.actions.act_window">
-			<field name="name">Generar compensación de presupuesto</field>
-			<field name="res_model">pa.budget.compensacion.wizard</field>
-			<field name="view_mode">form</field>
-			<field name="view_id" ref="pa_create_compensacion_presupuesto" />
-			<field name="target">new</field>
-		</record>			
-        <menuitem 
-            id="pa_create_compensacion_presupuesto_menu"
-            action="create_compensacion_presupuesto_action_pa" 
-            parent="pa_menu_cuentas_presupuestarias" 
-            groups="pa_group_direccion_director"
-            sequence="25"
-        />        
     </data>
 </openerp>

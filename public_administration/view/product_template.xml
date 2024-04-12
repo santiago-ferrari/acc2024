@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="pa_product_template_form_view" model="ir.ui.view">
+        <field name="model">product.template</field>
+        <field name="name">account.move.form.pa</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+		<field name="arch" type="xml">
+			<xpath expr="//page[@name='invoicing']" position="after">
+				<page string='Contabilidad presupuestaria'>
+					<group string='Cuentas presupuestarias' name="cuentas_presupuestarias">
+						<field name="pa_budget_accounts_ids" options="{'no_create_edit': True}"/>
+					</group>
+				</page>				
+			</xpath>
+		</field>
+    </record>
+</odoo>

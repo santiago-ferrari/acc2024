@@ -1,9 +1,9 @@
 ﻿# -*- coding: utf-8 -*-
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning
-import openerp.addons.decimal_precision as dp
+from odoo import models, fields, api, _
+from odoo.exceptions import Warning
+import odoo.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 

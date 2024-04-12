@@ -17,13 +17,13 @@
             <field name="name">Usuario administración pública</field>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
             <field name="category_id" ref="pa_administracion_publica"/>
-            <!-- field name="implied_ids" eval="[(4,ref('base.group_user'))]"/ -->
+            <field name="implied_ids" eval="[(4,ref('base.group_user'))]"/>
         </record>
         <record id="pa_group_direccion_director" model="res.groups">
             <field name="name">Director administración pública</field>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
             <field name="category_id" ref="pa_administracion_publica"/>
-            <!-- field name="implied_ids" eval="[(4,ref('base.group_user'))]"/ -->
+            <field name="implied_ids" eval="[(4,ref('public_administration.pa_group_usuario'))]"/>
     	</record>
     </data>
 </openerp>

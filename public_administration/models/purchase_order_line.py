@@ -23,4 +23,4 @@ class purhase_order_line(models.Model):
         comodel_name='pa.budget.lines', 
         string='Partida', 
         #required=True,
-        )
+        )  

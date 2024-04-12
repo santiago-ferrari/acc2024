@@ -11,15 +11,74 @@
             sequence="50"
             groups="pa_group_usuario,pa_group_direccion_director"
             />
-      
-        <menuitem
-            name="Cuentas"
-            id="pa_menu_cuentas_presupuestarias"
-            sequence="5"
-            parent="pa_menu_contabilidad_presupuestaria"
+			
+	 <record id="pa_budget_lines_action" model="ir.actions.act_window">
+		<field name="name">Líneas de presupuesto</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">pa.budget.lines</field>
+		<field name="view_mode">tree,form,pivot</field>
+		<field name="view_id" ref="pa_view_budget_lines_tree"/>
+		<!-- field name="domain">[('accounts_ids.recurso_erogacion','=','recurso')]</field>
+		<field name="context">{'accounts_ids.recurso_erogacion':'recurso'}</field -->
+		<field name="search_view_id" ref="public_administration.pa_view_pa_budget_lines_filter"/>      
+			<field name="help" type="html">
+			  <p class="oe_view_nocontent_create">
+				Click para un nuevo registro de líneas de presupuesto.
+			  </p>
+			</field>
+	</record> 			
+			<menuitem 
+				id="pa_menu_budget_lines" 
+				action="pa_budget_lines_action"
+				name="Líneas de presupuesto"
+				parent="pa_menu_contabilidad_presupuestaria" 
+				groups="pa_group_usuario"                  
+				sequence="10"
+			/>
+		<menuitem
+            name="Operaciones"
+            id="pa_menu_operaciones_presupuestarias"
+            sequence="20"
+			parent="pa_menu_contabilidad_presupuestaria"
             groups="pa_group_usuario,pa_group_direccion_director"
-            />      
-           
+            />
+       <act_window
+            id="pa_action_create_compensacion_presupuesto_wizard"
+            name='Generar compensación de presupuesto'
+            view_mode = "form"
+            res_model="pa.budget.compensacion.wizard"
+            target="new"/>
+        <menuitem 
+            id="pa_menu_create_compensacion_presupuesto_wizard" 
+            action="pa_action_create_compensacion_presupuesto_wizard" 
+            parent="pa_menu_operaciones_presupuestarias" 
+            groups="pa_group_usuario,pa_group_direccion_director"
+            sequence="10"
+        /> 			
+			<menuitem 
+				id="pa_menu_budget_compensacion" 
+				action="pa_budget_compensacion_action"
+				name="Erogación: Compensación de presupuesto"
+				parent="pa_menu_operaciones_presupuestarias" 
+				groups="pa_group_usuario,pa_group_direccion_director"                  
+				sequence="20"
+			/>			
+			 <record id="pa_budget_lines_history_action" model="ir.actions.act_window">
+				<field name="name">Modificaciones</field>
+				<field name="type">ir.actions.act_window</field>
+				<field name="res_model">pa.budget.lines.history</field>
+				<field name="view_mode">tree</field>
+				<field name="view_id" ref="pa_view_budget_lines_history_tree"/>
+				<field name="context">{}</field>
+			</record>	
+			<menuitem 
+				id="pa_menu_budget_modificacion" 
+				action="pa_budget_lines_history_action"
+				name="Modificación del presupuesto"
+				parent="pa_menu_operaciones_presupuestarias" 
+				groups="pa_group_usuario,pa_group_direccion_director"                  
+				sequence="25"
+			/>            
         <!-- menuitem
             name="Procesamiento"
             id="pa_menu_procesamiento_presupuesto"
@@ -34,7 +93,102 @@
             sequence="100"
             parent="pa_menu_contabilidad_presupuestaria"
             groups="pa_group_usuario,pa_group_direccion_director"
-            />      
+            /> 
+			 <record id="pa_budget_accounts" model="ir.actions.act_window">
+				<field name="name">Cuentas de presupuesto</field>
+				<field name="type">ir.actions.act_window</field>
+				<field name="res_model">pa.budget.account</field>
+				<field name="view_mode">tree,form</field>
+			</record> 
+
+
+		<record id="create_budget_lines_action_pa" model="ir.actions.act_window">
+			<field name="name">Copiar líneas de presupuesto</field>
+			<field name="res_model">pa.create_budget_lines</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="pa_create_budget_lines" />
+			<field name="target">new</field>
+		</record>			
+		
+        <menuitem 
+            id="pa_create_budget_lines_menu"
+            action="create_budget_lines_action_pa" 
+            parent="pa_menu_configuracion_contabilidad_presupuestaria" 
+            groups="pa_group_usuario,pa_group_direccion_director"
+            sequence="25"
+        />   
+
+       <act_window
+            id="pa_action_report_presupuesto"
+            name='Reporte de contabilidad presupuestaria'
+            view_mode = "form"
+            res_model="pa.wizard_report_presupuesto"
+            target="new"/>
+
+
+
+			
+ 			
+			<menuitem
+				name="Cuentas de presupuesto"
+				id="pa_menu_cuentas_presupuestarias"
+				sequence="10"
+				action='pa_budget_accounts'
+				parent="pa_menu_configuracion_contabilidad_presupuestaria"
+				groups="pa_group_usuario,pa_group_direccion_director"
+				/> 
+        <menuitem id="pa_menu_report_presupuesto"
+			parent="pa_menu_cuentas_presupuestarias"
+			action="pa_action_report_presupuesto"
+            groups="pa_group_usuario,pa_group_direccion_director"
+			sequence="40"/>
+			
+		<record id="pa_budget_action" model="ir.actions.act_window">
+			<field name="name">Presupuestos</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">pa.budget</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="pa_view_budget_tree"/>
+			<!-- field name="search_view_id" ref="pa_view_budget_document_filter"/ -->     
+				<field name="help" type="html">
+				  <p class="oe_view_nocontent_create">
+					Click para un nuevo registro de presupuesto.
+				  </p>
+				</field>
+		</record>    
+		<menuitem 
+			name="Presupuestos"
+			action="pa_budget_action" 
+			id="pa_menu_presupuestos" 
+			parent="pa_menu_configuracion_contabilidad_presupuestaria" 
+			groups="pa_group_usuario,pa_group_direccion_director"                  
+			sequence="20"
+		/>
+		<record id="pa_budget_document_action" model="ir.actions.act_window">
+			<field name="name">Documentos</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">pa.budget.document</field>
+			<field name="view_mode">form,tree</field>
+			<field name="view_id" ref="pa_view_budget_document_tree"/>
+			<field name="search_view_id" ref="pa_view_budget_document_filter"/>      
+				<field name="help" type="html">
+				  <p class="oe_view_nocontent_create">
+					Click para un nuevo registro de documento.
+				  </p>
+				</field>
+		  </record>      
+		<menuitem 
+			name="Documentos"
+			action="pa_budget_document_action" 
+			id="pa_menu_documentos" 
+			parent="pa_menu_configuracion_contabilidad_presupuestaria" 
+			groups="pa_group_usuario,pa_group_direccion_director"                  
+			sequence="40"
+		/>
+
+
+
+			
         <menuitem 
             name="Años fiscales"
             action="date_range.date_range_action" 
