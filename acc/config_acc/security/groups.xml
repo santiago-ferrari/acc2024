@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		<record model="ir.module.category" id="mc_acc">
+			<field name="name">Agencia Conectividad Córdoba</field>
+			<field name="description">Permisos de la Agencia Conectividad Córdoba</field>
+			<field name="sequence">1</field>
+			<field name="parent_id" ref="base.group_user"/>
+		</record>
+		<record model="ir.module.category" id="module_category_acc">
+			<field name="name">Agencia Conectividad Córdoba</field>
+			<field name="description">Agencia Conectividad Córdoba</field>
+			<field name="sequence">1</field>
+			<field name="parent_id" ref="mc_acc"/>
+		</record>
+        <record id="acc_group_crm_a_factibilizar" model="res.groups">
+            <field name="name">CRM: Oportunidad a factibilizar</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="module_category_acc"/>
+            <field name="implied_ids" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+<!--         <record id="acc_group_crm_no_factible" model="res.groups">
+            <field name="name">CRM: Oportunidad a no factible</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="module_category_acc"/>
+            <field name="implied_ids" eval="[(4,ref('base.group_user'))]"/>
+        </record>  -->       
+        <record id="acc_group_crm_a_negociacion" model="res.groups">
+            <field name="name">CRM: Oportunidad a negociación</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="module_category_acc"/>
+            <field name="implied_ids" eval="[(4,ref('base.group_user'))]"/>
+        </record>        
+        <record id="acc_group_crm_a_provision" model="res.groups">
+            <field name="name">CRM: Oportunidad a provisión</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="module_category_acc"/>
+            <field name="implied_ids" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+        <record id="acc_group_crm_estado_contrato_a_firmado_acc" model="res.groups">
+            <field name="name">CRM: Estado del contrato A firmado por ACC</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="module_category_acc"/>
+            <field name="implied_ids" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+        <record id="acc_group_estado_contrato_doc_pendiente_validarCGA" model="res.groups">
+            <field name="name">CRM: Estado del contrato Doc Pendiente A validar por GCA</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="module_category_acc"/>
+            <field name="implied_ids" eval="[(4,ref('base.group_user'))]"/>
+        </record>         
+        
+        <record id="acc_group_responsable_legales" model="res.groups">
+            <field name="name">Responsable departamento legales</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="module_category_acc"/>
+            <field name="implied_ids" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+
+        <record id="acc_group_ingeniero_comercial" model="res.groups">
+            <field name="name">Ingeniero Comercial</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="module_category_acc"/>
+            <field name="implied_ids" eval="[(4,ref('base.group_user'))]"/>
+        </record>        
+    </data>
+</odoo>

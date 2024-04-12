@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<odoo>
+
+<data>
+    <record id="crm_lead_view_tree_acc" model="ir.ui.view">
+        <field name="model">crm.lead</field>
+        <field name="name">crm.lead.tree.acc</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='activity_ids']" position="after">
+				<field name="products_node_ids" widget='many2many_tags' optional="show"/>
+				<field name="node_zone_localidad_id" optional="show"/>
+				<field name="node_nodo_arsat" optional="show"/>
+				<field name="estado_contrato" optional="show"/>
+				<field name="project_stage_id" optional="show"/>
+				<field name="ticket_jira" optional="hide"/>
+			</xpath>
+		</field>
+	</record>
+	
+	        <record id="crm_lead_view_form_acc" model="ir.ui.view">
+            <field name="name">crm.lead.form.acc</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+            <field name="arch" type="xml">
+				<field name="tag_ids" position='after'>
+					
+                    <field name="motivo_no_factibilidad_id"/>
+                    <field name="tipo_factibilidad" widget='radio'/>
+                    <field name="presentada_gca"/>
+                    <field name="ticket_jira"/>
+				</field>
+			</field>
+        </record>
+</data>
+<!-- 	<data>
+	  <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+		<page string="Nodos" name="studio_page_sBngq">
+	
+		  <group>
+			<group name="studio_group_sBngq_left">
+				<field name="products_node_ids" widget='many2many_tags'/>
+			</group>		  
+			<group>
+			  <field name="partner_industry_id"/>
+			</group>
+			<group>
+			  <field name="partner_localidad_id"/>
+			</group>
+		  </group>
+		</page>
+		<page string="Legales" name="studio_page_hVPzV">
+		  <group name="studio_group_hVPzV">
+			<group>
+			  <field name="cumple_requisitos_legales"/>
+			</group>
+			<group name="studio_group_hVPzV_right"/>
+		  </group>
+		</page>
+	  </xpath>
+	</data> -->
+</odoo>

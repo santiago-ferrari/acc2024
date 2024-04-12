@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+         <record id="crm_acc_motivo_no_factibilidad_action" model="ir.actions.act_window">
+            <field name="name">Motivo de no factibilidad</field>
+            <field name="res_model">acc.motivo.no.factibilidad</field>
+            <field name="view_mode">tree,form</field>
+        </record>                      
+        <menuitem
+            id="menu_acc_motivo_no_factibilidad"
+            name="Motivo de no factibilidad"
+            parent="crm.menu_crm_config_lead"
+            action="config_acc.crm_acc_motivo_no_factibilidad_action"
+            sequence="7"/>
+    </data>
+</openerp>
